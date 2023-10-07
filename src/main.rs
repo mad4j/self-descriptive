@@ -31,9 +31,10 @@ fn main() {
     );
 
     println!("Self-descriptive numbers");
+    println!("------------------------");
 
     for k in 1..limit {
-        if k % 10_000_000 == 0 {
+        if k % 1_000_000 == 0 {
             pb.set_position(k);
         }
 
