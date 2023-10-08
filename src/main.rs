@@ -30,6 +30,7 @@ fn main() {
         .progress_chars("#>-"),
     );
 
+    println!();
     println!("Self-descriptive numbers");
     println!("------------------------");
 
