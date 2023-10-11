@@ -1,4 +1,8 @@
-use indicatif::{HumanFloatCount, ProgressBar, ProgressStyle};
+use rayon::prelude::*;
+
+use indicatif::{
+    HumanFloatCount, ParallelProgressIterator, ProgressBar, ProgressDrawTarget, ProgressStyle,
+};
 
 fn pow10(n: u64) -> u64 {
     10u64.pow(n as u32)
@@ -21,31 +25,36 @@ fn is_selfdescriptive(value: u64) -> bool {
 fn main() {
     let limit = 10_000_000_000u64;
 
-    let pb = ProgressBar::new(limit);
-    pb.set_style(
-        ProgressStyle::with_template(
-            "{spinner:.green} [{elapsed_precise}] [{bar:.cyan/blue}] {percent:>3}% ({eta}) {msg}",
-        )
-        .unwrap()
-        .progress_chars("#>-"),
-    );
+    let pb = ProgressBar::new(limit)
+        .with_finish(indicatif::ProgressFinish::Abandon)
+        .with_style(
+            ProgressStyle::with_template(
+                "{spinner:.green} [{elapsed_precise}] [{bar:.cyan/blue}] {percent:>3}% ({eta}) {msg}",
+            )
+            .unwrap()
+            .progress_chars("#>-"),
+        );
+
+    pb.set_draw_target(ProgressDrawTarget::stderr_with_hz(20));
 
     println!();
     println!("Self-descriptive numbers");
     println!("------------------------");
 
-    for k in 1..limit {
-        if k % 1_000_000 == 0 {
-            pb.set_position(k);
-        }
+    println!("Logical CPUs: {}", num_cpus::get());
+    println!("Physical CPUs: {}", num_cpus::get_physical());
+    println!("------------------------");
 
-        if is_selfdescriptive(k) {
-            pb.suspend(|| println!("> FOUND: {}", k));
-        }
-    }
+    let solutions: Vec<u64> = (1..limit)
+        .into_par_iter()
+        .progress_with(pb.clone())
+        .filter(|&k| is_selfdescriptive(k))
+        .inspect(|&k| pb.suspend(|| println!("+ Found: {}", k)))
+        .collect();
 
-    pb.finish_with_message(format!(
-        "completed @ {} steps/second",
+    println!(
+        "Completed: found {} solutions @ {} steps/secs",
+        solutions.len(),
         HumanFloatCount(pb.per_sec())
-    ));
+    );
 }
