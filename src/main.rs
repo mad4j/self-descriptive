@@ -39,8 +39,8 @@ fn main() {
     println!("Self-descriptive numbers");
     println!("----------------------------------");
     
-    println!("[num_cpus] Logical CPUs   : {:>3}", num_cpus::get());
     println!("[num_cpus] Physical CPUs  : {:>3}", num_cpus::get_physical());
+    println!("[num_cpus] Logical CPUs   : {:>3}", num_cpus::get());
     println!("[rayon]    Current Threads: {:>3}", rayon::current_num_threads());
     println!("----------------------------------");
 
