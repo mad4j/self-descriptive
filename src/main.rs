@@ -54,7 +54,7 @@ fn main() {
     pb.finish();
 
     println!(
-        " - Completed: found {} solutions @ {} steps/secs",
+        "- Completed: found {} solutions @ {} steps/secs",
         solutions.len(),
         HumanFloatCount(pb.per_sec())
     );
