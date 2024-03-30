@@ -1,4 +1,4 @@
-# self-descriptive
+# Self Descriptive Numbers
 Searching of self-descriptive numbers
 
 > In mathematics, a self-descriptive number is an integer m that in a given base b is b digits long in which each digit d at position n (the most significant digit being at position 0 and the least significant at position b−1) counts how many instances of digit n are in m.
